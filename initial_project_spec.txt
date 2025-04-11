@@ -1,0 +1,203 @@
+﻿
+**Project Specification and Development Plan: Billable Hour Planning & Tracking Application**
+
+**Version:** 1.0
+**Date:** April 10, 2025
+
+**1. Introduction**
+
+* **1.1. Overview:** This document outlines the specification and development plan for a web application designed to assist legal professionals (attorneys) in proactively planning, tracking, and managing their annual billable hour requirements. The application aims to provide a personalized and dynamic plan based on user inputs, facilitating consistent progress towards annual goals.
+* **1.2. Problem Statement:** Attorneys often face significant pressure to meet demanding annual billable hour targets. Managing this requires careful planning around non-working days, variable workloads throughout the year, and consistent tracking. Lack of adequate tools can lead to stress, unrealistic daily workloads, and difficulty catching up if falling behind pace.
+* **1.3. Proposed Solution:** A web application where users input their annual goal, unavailable days (holidays, vacation), and anticipated workload variations (busy/slow months). The system will calculate and present a dynamic daily/monthly plan, visualize progress, and offer tools for tracking and adjustment.
+* **1.4. Target Audience:** Attorneys and other legal professionals required to track and meet annual billable hour targets.
+
+**2. Goals and Objectives**
+
+* Provide users with a dynamically generated, realistic daily and monthly billable hour plan.
+* Allow users to easily input their specific parameters (annual goal, time off, workload variations).
+* Enable users to track their daily logged hours against their plan.
+* Visualize progress towards monthly and annual goals through an intuitive dashboard and calendar interface.
+* Offer tools to help users adjust their plan and catch up if they fall behind schedule.
+* Ensure user data privacy and security through individual accounts.
+* Deliver a functional Minimum Viable Product (MVP) deployable to a web environment.
+
+**3. Functional Requirements (Core User Features - MVP)**
+
+* **3.1. User Authentication & Management:**
+    * Users shall register with an email address and password.
+    * Passwords shall be securely hashed (e.g., using bcrypt).
+    * Users shall log in to access their personalized data.
+    * All user data (goals, logs, days off, etc.) shall be scoped to the individual logged-in user.
+    * An administrative interface/capability (initially direct database access, potentially a simple UI later) for system administration (e.g., user management - TBD based on need). A privacy disclaimer will clarify admin access rights.
+* **3.2. Initial Setup Wizard:**
+    * Upon first login or via a settings page, users shall input:
+        * Annual Billable Hour Goal (numeric).
+        * Firm Holidays (pre-populated list, user can add/remove/modify).
+        * Personal/Vacation Days (manual date input).
+        * Anticipated Monthly Workload Variation (e.g., selecting "Busy," "Normal," "Slow" or applying a weight factor like 1.2, 1.0, 0.8 for each month).
+    * The system shall process these inputs to generate the initial billable hour plan.
+* **3.3. Billable Hour Planning Logic:**
+    * The system shall calculate the total number of available working days in the year, excluding weekends and user-defined non-working days (holidays, vacation).
+    * The system shall distribute the total annual billable hour goal across months based on the number of working days per month and the user-defined workload weighting.
+    * The system shall calculate a target number of billable hours for each working day.
+    * The calculation shall aim to avoid excessively high daily targets (e.g., configurable cap, perhaps defaulting to <= 8-10 hours/day), potentially smoothing distribution if initial calculations result in spikes.
+* **3.4. Calendar View:**
+    * Display a monthly calendar interface.
+    * Show the calculated target billable hours for each working day.
+    * Visually distinguish non-working days (weekends, holidays, vacation).
+    * Potentially color-code days based on status (e.g., high target, low target, day off).
+    * Allow users to manually override the calculated target for specific days.
+* **3.5. Daily Tracking & Dashboard:**
+    * Provide an interface for users to log the actual hours billed for any given day.
+    * Display a dashboard summarizing:
+        * Progress towards the current month's goal (actual vs. target).
+        * Progress towards the annual goal (actual vs. target).
+        * Current pace (e.g., "X hours ahead," "Y hours behind" schedule).
+        * Recommended daily hours needed *from today forward* to meet the monthly/annual goal based on current progress.
+    * Implement a "Catch-Up Planning" feature: If behind schedule, the system suggests how to redistribute the shortfall over upcoming working days (e.g., adding Z hours per day for the next N days).
+
+**4. Non-Functional Requirements**
+
+* **4.1. Usability:**
+    * Simple, clean, and intuitive user interface.
+    * Accessible via standard desktop web browsers. Mobile responsiveness is a Phase 2 goal.
+* **4.2. Security:**
+    * Secure password hashing.
+    * Protection against common web vulnerabilities (e.g., XSS, CSRF - via Flask best practices).
+    * User data isolation.
+* **4.3. Performance:**
+    * Page load times and calculation processing should be reasonably fast for a single-user experience. No specific benchmarks defined for MVP but should feel responsive.
+* **4.4. Maintainability:**
+    * Codebase should be well-organized (e.g., using Flask Blueprints for modularity).
+    * Follow Python coding standards (e.g., PEP 8).
+    * Use version control (Git).
+* **4.5. Scalability:**
+    * While the MVP targets individual users, the use of PostgreSQL for deployment allows for potential future scaling if required. The initial design should not preclude multi-user growth.
+
+**5. Technical Specifications**
+
+* **5.1. Frontend:**
+    * HTML5, CSS3 (potentially Tailwind CSS later)
+    * Jinja2 (via Flask)
+    * JavaScript (Vanilla JS or a lightweight library like Alpine.js if needed for minor interactivity, potentially Bootstrap for layout if needed)
+* **5.2. Backend:**
+    * Python 3.x
+    * Flask Web Framework
+    * Flask Blueprints (for route organization)
+    * SQLAlchemy (for ORM)
+    * Flask-Login (for session management and user authentication)
+    * Werkzeug (for password hashing - specifically `generate_password_hash`, `check_password_hash` which often uses bcrypt or similar)
+* **5.3. Database:**
+    * SQLite (for local development)
+    * PostgreSQL (for production deployment)
+* **5.4. Development Environment:**
+    * OS: Ubuntu (or similar Linux/macOS/WSL)
+    * IDE: Cursor / VS Code
+    * Version Control: Git / GitHub
+    * Dependency Management: Python `venv`, `requirements.txt`
+* **5.5. Deployment (Target):**
+    * Platform: Web-accessible via browsers.
+    * Hosting Candidates: Render (preferred), Fly.io. Replit (for early preview/testing only).
+    * Requirements: Support for Python/Flask applications and PostgreSQL database, ideally with a free or low-cost tier suitable for MVP.
+
+**6. Data Schema (Initial Proposed)**
+
+* **User**
+    * `id` (PK, Integer, Auto-increment)
+    * `email` (String, Unique, Not Null)
+    * `password_hash` (String, Not Null)
+* **Goal**
+    * `id` (PK, Integer, Auto-increment)
+    * `user_id` (FK referencing User.id, Not Null)
+    * `year` (Integer, Not Null)
+    * `total_hours` (Integer, Not Null)
+    * *(Constraint: Unique combination of user_id, year)*
+* **DayOff**
+    * `id` (PK, Integer, Auto-increment)
+    * `user_id` (FK referencing User.id, Not Null)
+    * `date` (Date, Not Null)
+    * `type` (String, e.g., 'Holiday', 'Vacation', 'Personal') - *Optional, potentially useful*
+    * *(Constraint: Unique combination of user_id, date)*
+* **MonthlyWeight**
+    * `id` (PK, Integer, Auto-increment)
+    * `user_id` (FK referencing User.id, Not Null)
+    * `year` (Integer, Not Null) - *Added for clarity*
+    * `month` (Integer, 1-12, Not Null)
+    * `weight` (Float, Default 1.0, Not Null) - *e.g., 1.0=Normal, 1.2=Busy, 0.8=Slow*
+    * *(Constraint: Unique combination of user_id, year, month)*
+* **DailyLog**
+    * `id` (PK, Integer, Auto-increment)
+    * `user_id` (FK referencing User.id, Not Null)
+    * `date` (Date, Not Null)
+    * `hours_billed` (Float or Decimal, Not Null)
+    * `target_hours_override` (Float or Decimal, Nullable) - *To store manual overrides from Calendar view*
+    * *(Constraint: Unique combination of user_id, date)*
+
+**7. Development Plan (Phase 1 - MVP)**
+
+* **Sprint 1: Setup & Core Data Structures (Approx. 1 Week)**
+    * Initialize project repository (Git, GitHub).
+    * Set up virtual environment (`venv`), install core dependencies (Flask, SQLAlchemy).
+    * Create basic Flask application structure (app factory pattern, blueprints).
+    * Implement database models (SQLAlchemy) based on the schema.
+    * Set up basic configuration (database connection strings for SQLite).
+    * Create initial database migrations (if using Alembic, recommended).
+    * Basic "Hello World" route and template.
+    * **Deliverable:** Runnable local Flask app connected to SQLite DB, basic project structure on GitHub.
+* **Sprint 2: User Authentication & Initial Input (Approx. 1 Week)**
+    * Implement User Registration and Login functionality (Flask-Login, password hashing).
+    * Create forms and routes for the Initial Setup Wizard (Goal, Days Off, Monthly Weights).
+    * Store initial setup data in the database, associated with the logged-in user.
+    * Implement basic user session management.
+    * **Deliverable:** Users can register, log in, and save their initial planning parameters.
+* **Sprint 3: Planning Logic & Calculation (Approx. 1 Week)**
+    * Develop the core Python logic to calculate available workdays based on user inputs (Goal year, Days Off).
+    * Implement logic to distribute `total_hours` across months based on workdays and `MonthlyWeight`.
+    * Calculate daily target hours, incorporating logic to avoid unrealistic peaks.
+    * Store or calculate these targets efficiently (potentially store calculated daily targets in `DailyLog` or a dedicated `PlannedDay` table, or calculate on-the-fly).
+    * **Deliverable:** Backend logic capable of generating a full daily/monthly plan based on user inputs. Unit tests for planning logic.
+* **Sprint 4: Calendar View & Daily Target Display (Approx. 1 Week)**
+    * Develop the calendar view template (Jinja2).
+    * Fetch and display the calculated daily targets on the calendar for the logged-in user.
+    * Implement visual styling for different day types (workday, weekend, holiday, vacation).
+    * Add functionality to allow users to manually override the target for a specific day (saving to `DailyLog.target_hours_override`).
+    * **Deliverable:** Interactive calendar displaying the user's personalized plan, with override capability.
+* **Sprint 5: Daily Logging & Dashboard (Approx. 1 Week)**
+    * Create form/interface for users to log `hours_billed` for specific dates.
+    * Develop the Dashboard view.
+    * Implement logic to calculate and display progress (monthly, annual), current pace (ahead/behind), and recommended forward-looking daily targets.
+    * Implement basic catch-up suggestion logic.
+    * **Deliverable:** Users can log daily hours; Dashboard displays key progress metrics and catch-up guidance.
+* **Sprint 6: Testing, Refinement & Basic Deployment Prep (Approx. 1 Week)**
+    * End-to-end testing of all MVP features.
+    * Bug fixing and UI refinement.
+    * Prepare `requirements.txt`.
+    * Configure for PostgreSQL connection.
+    * Write basic deployment documentation/scripts (e.g., Procfile for Heroku/Render).
+    * **Deliverable:** Stable MVP codebase ready for initial deployment attempt.
+
+**8. Future Enhancements (Phase 2 / Stretch Goals)**
+
+* **8.1. Deployment & Hosting:** Migrate database to PostgreSQL and deploy the application to Render (or chosen alternative).
+* **8.2. Mobile Responsiveness:** Implement responsive design using CSS frameworks (Bootstrap/Tailwind) or custom media queries.
+* **8.3. Reporting & Export:** Add features to generate summary reports (e.g., monthly performance) and export data to CSV.
+* **8.4. Notifications:** Implement email reminders (e.g., weekly summary, reminders to log hours).
+* **8.5. Advanced Planning:** More granular planning options (e.g., half-days, recurring events).
+* **8.6. Team Features:** Potential future support for small teams or firms (requires significant data model and permission changes).
+* **8.7. Enhanced Visualizations:** More sophisticated charts and graphs for progress tracking.
+
+**9. Assumptions**
+
+* Users have a clear annual billable hour goal.
+* Standard work week is Monday-Friday unless specified otherwise via Days Off.
+* Users are comfortable using a web-based application.
+* Initial pre-loaded holidays will be for a specific jurisdiction (e.g., US Federal) and editable.
+
+**10. Constraints**
+
+* Initial development focuses on the MVP features outlined in Phase 1.
+* Deployment will target free or low-cost hosting platforms.
+* The initial focus is on desktop browser usability.
+* The project is developed by a single developer initially.
+
+---
