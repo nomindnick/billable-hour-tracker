@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - Billable Hour Tracker</title>
+    {% else %}
+    <title>Billable Hour Tracker</title>
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      nav {
+        background-color: #2c3e50;
+        color: white;
+        padding: 10px 0;
+      }
+      nav .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      nav a {
+        color: white;
+        text-decoration: none;
+        margin-left: 15px;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+      .content {
+        padding: 20px 0;
+      }
+      .flash {
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        color: #721c24;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      input[type="submit"] {
+        background-color: #2c3e50;
+        color: white;
+        cursor: pointer;
+        border: none;
+        padding: 10px 15px;
+      }
+      input[type="submit"]:hover {
+        background-color: #1a252f;
+      }
+      .help-text {
+        font-size: 0.8em;
+        color: #666;
+      }
+      .error {
+        color: red;
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="container">
+        <div>
+          <a href="{{ url_for('main.index') }}">Billable Hour Tracker</a>
+        </div>
+        <div>
+          {% if current_user.is_anonymous %}
+          <a href="{{ url_for('auth.login') }}">Login</a>
+          <a href="{{ url_for('auth.register') }}">Register</a>
+          {% else %}
+          <span>{{ current_user.email }}</span>
+          <a href="{{ url_for('auth.logout') }}">Logout</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    
+    <div class="container">
+      <div class="content">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash">
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </body>
+</html>

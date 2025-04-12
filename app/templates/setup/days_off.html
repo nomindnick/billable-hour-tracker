@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Setup Wizard - Step 2: Days Off</h1>
+  <p>Now, let's add your days off for the year (holidays, vacation, personal days).</p>
+  
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    
+    {% for day_form in form.days_off %}
+      <fieldset style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
+        <legend>Day Off</legend>
+        <div class="form-group">
+          {{ day_form.date.label }}
+          {{ day_form.date(type="date") }}
+          {% for error in day_form.date.errors %}
+          <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+        
+        <div class="form-group">
+          {{ day_form.type.label }}
+          {{ day_form.type() }}
+          {% for error in day_form.type.errors %}
+          <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      </fieldset>
+    {% endfor %}
+    
+    <div class="form-group" style="display: flex; gap: 10px;">
+      {{ form.add_day(value="Add Another Day") }}
+      {{ form.submit(value="Next") }}
+    </div>
+  </form>
+  
+  <div style="margin-top: 20px;">
+    <p><small>Note: You can skip this step by clicking Next if you don't want to add any days off right now.</small></p>
+  </div>
+{% endblock %}

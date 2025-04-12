@@ -1,15 +1,24 @@
-<!doctype html>
-<html>
-  <head>
-    {% if title %}
-    <title>{{ title }} - Billable Hour Tracker</title>
-    {% else %}
-    <title>Billable Hour Tracker</title>
-    {% endif %}
-  </head>
-  <body>
-    <h1>Hello, {{ user.username }}!</h1>
+{% extends "base.html" %}
+
+{% block content %}
+  {% if current_user.is_anonymous %}
+    <h1>Welcome to Billable Hour Tracker</h1>
+    <p>This application helps legal professionals plan and track their annual billable hour requirements.</p>
+    <p>Please <a href="{{ url_for('auth.login') }}">login</a> or <a href="{{ url_for('auth.register') }}">register</a> to get started.</p>
+  {% else %}
+    <h1>Hello, {{ current_user.email }}!</h1>
     <p>Welcome to your Billable Hour Planning & Tracking Application.</p>
-    <p>This is the basic index page.</p>
-  </body>
-</html>
+    
+    {% if current_user.goals.first() %}
+      <h2>Your Dashboard</h2>
+      <p>
+        <strong>Annual Goal:</strong> {{ current_user.goals.first().total_hours }} hours
+      </p>
+      <!-- Dashboard content will be added in future sprints -->
+      <p>Stay tuned for dashboard features coming soon!</p>
+    {% else %}
+      <p>You haven't completed your initial setup yet.</p>
+      <p><a href="{{ url_for('setup.wizard') }}">Complete Setup</a></p>
+    {% endif %}
+  {% endif %}
+{% endblock %}

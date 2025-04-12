@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Setup Wizard - Step 3: Monthly Workload</h1>
+  <p>Finally, let's set up your anticipated monthly workload variations.</p>
+  <p class="help-text">
+    Use values between 0.1 and 2.0 to indicate relative workload intensity:
+    <br>1.0 = Normal workload
+    <br>Greater than 1.0 = Busier months (e.g., 1.2 = 20% busier than normal)
+    <br>Less than 1.0 = Slower months (e.g., 0.8 = 20% slower than normal)
+  </p>
+  
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+      <div class="form-group">
+        {{ form.january.label }}
+        {{ form.january() }}
+        {% for error in form.january.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.february.label }}
+        {{ form.february() }}
+        {% for error in form.february.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.march.label }}
+        {{ form.march() }}
+        {% for error in form.march.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.april.label }}
+        {{ form.april() }}
+        {% for error in form.april.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.may.label }}
+        {{ form.may() }}
+        {% for error in form.may.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.june.label }}
+        {{ form.june() }}
+        {% for error in form.june.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.july.label }}
+        {{ form.july() }}
+        {% for error in form.july.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.august.label }}
+        {{ form.august() }}
+        {% for error in form.august.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.september.label }}
+        {{ form.september() }}
+        {% for error in form.september.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.october.label }}
+        {{ form.october() }}
+        {% for error in form.october.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.november.label }}
+        {{ form.november() }}
+        {% for error in form.november.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.december.label }}
+        {{ form.december() }}
+        {% for error in form.december.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    
+    <div class="form-group" style="margin-top: 20px;">
+      {{ form.submit() }}
+    </div>
+  </form>
+{% endblock %}
