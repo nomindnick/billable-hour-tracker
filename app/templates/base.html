@@ -7,6 +7,7 @@
     <title>Billable Hour Tracker</title>
     {% endif %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -82,39 +83,24 @@
         font-size: 0.8em;
       }
     </style>
-  </head>
-  <body>
-    <nav>
-      <div class="container">
-        <div>
-          <a href="{{ url_for('main.index') }}">Billable Hour Tracker</a>
-        </div>
-        <div>
-          {% if current_user.is_anonymous %}
-          <a href="{{ url_for('auth.login') }}">Login</a>
-          <a href="{{ url_for('auth.register') }}">Register</a>
-          {% else %}
-          <span>{{ current_user.email }}</span>
-          <a href="{{ url_for('auth.logout') }}">Logout</a>
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-    
-    <div class="container">
-      <div class="content">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flash">
-          {% for message in messages %}
-          <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-        
-        {% block content %}{% endblock %}
-      </div>
+<nav>
+  <div class="container">
+    <div>
+      <a href="{{ url_for('main.index') }}">Billable Hour Tracker</a>
+      {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard.index') }}">Dashboard</a>
+      <a href="{{ url_for('dashboard.calendar') }}">Calendar</a>
+      <a href="{{ url_for('dashboard.log_hours') }}">Log Hours</a>
+      {% endif %}
     </div>
-  </body>
-</html>
+    <div>
+      {% if current_user.is_anonymous %}
+      <a href="{{ url_for('auth.login') }}">Login</a>
+      <a href="{{ url_for('auth.register') }}">Register</a>
+      {% else %}
+      <span>{{ current_user.email }}</span>
+      <a href="{{ url_for('auth.logout') }}">Logout</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

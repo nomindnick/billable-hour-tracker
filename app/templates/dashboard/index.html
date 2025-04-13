@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Billable Hours Dashboard</h1>
+  
+  <div class="dashboard-summary">
+    <div class="card">
+      <h2>Annual Goal</h2>
+      <div class="goal-value">{{ goal.total_hours }} hours</div>
+      <div class="year">{{ goal.year }}</div>
+    </div>
+    
+    <div class="card">
+      <h2>Progress</h2>
+      <div class="progress-bar">
+        <div class="progress" style="width: {{ (metrics.total_logged / goal.total_hours * 100)|round|int }}%"></div>
+      </div>
+      <div class="progress-details">
+        <div>{{ metrics.total_logged|round(1) }} of {{ goal.total_hours }} hours ({{ (metrics.total_logged / goal.total_hours * 100)|round(1) }}%)</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Current Pace</h2>
+      <div class="pace-value {% if metrics.current_pace >= 0 %}positive{% else %}negative{% endif %}">
+        {% if metrics.current_pace >= 0 %}
+          {{ metrics.current_pace|round(1) }} hours ahead
+        {% else %}
+          {{ (metrics.current_pace * -1)|round(1) }} hours behind
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Recommended Daily</h2>
+      <div class="recommended-value">{{ metrics.recommended_daily|round(1) }} hours/day</div>
+      <div class="recommended-note">going forward to meet goal</div>
+    </div>
+  </div>
+  
+  <h2>Monthly Breakdown</h2>
+  <div class="monthly-breakdown">
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Target Hours</th>
+          <th>Logged Hours</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for month_num, target_hours in monthly_summary.items() %}
+        <tr>
+          <td>{{ month_num|month_name }}</td>
+          <td>{{ target_hours|round(1) }}</td>
+          <td>{{ monthly_logged.get(month_num, 0)|round(1) }}</td>
+          <td>
+            <div class="progress-bar small">
+              <div class="progress" style="width: {{ (monthly_logged.get(month_num, 0) / target_hours * 100)|round|int if target_hours > 0 else 0 }}%"></div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="action-buttons">
+    <a href="{{ url_for('dashboard.calendar') }}" class="button">View Calendar</a>
+    <a href="{{ url_for('dashboard.log_hours') }}" class="button">Log Hours</a>
+  </div>
+{% endblock %}

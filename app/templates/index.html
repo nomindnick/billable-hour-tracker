@@ -14,11 +14,15 @@
       <p>
         <strong>Annual Goal:</strong> {{ current_user.goals.first().total_hours }} hours
       </p>
-      <!-- Dashboard content will be added in future sprints -->
-      <p>Stay tuned for dashboard features coming soon!</p>
+      
+      <div class="action-buttons">
+        <a href="{{ url_for('dashboard.index') }}" class="button">Go to Dashboard</a>
+        <a href="{{ url_for('dashboard.calendar') }}" class="button">View Calendar</a>
+        <a href="{{ url_for('dashboard.log_hours') }}" class="button">Log Hours</a>
+      </div>
     {% else %}
       <p>You haven't completed your initial setup yet.</p>
-      <p><a href="{{ url_for('setup.wizard') }}">Complete Setup</a></p>
+      <p><a href="{{ url_for('setup.wizard') }}" class="button">Complete Setup</a></p>
     {% endif %}
   {% endif %}
 {% endblock %}

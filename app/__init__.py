@@ -30,6 +30,9 @@ def create_app(config_class=Config):
     
     from app.setup import bp as setup_bp
     app.register_blueprint(setup_bp, url_prefix='/setup')
+    
+    from app.dashboard import bp as dashboard_bp
+    app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
 
     # Import models here AFTER db is initialized and within app context
     # This is important for Flask-Migrate

@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import current_user, login_required
 from app import db
 from app.setup import bp
-from app.setup.forms import GoalForm, DaysOffForm, MonthlyWeightForm, DayOffForm
+from app.setup.forms import GoalForm, DaysOffForm, MonthlyWeightForm
 from app.models import Goal, DayOff, MonthlyWeight
 
 @bp.route('/wizard', methods=['GET', 'POST'])

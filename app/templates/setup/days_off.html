@@ -12,16 +12,16 @@
         <legend>Day Off</legend>
         <div class="form-group">
           {{ day_form.date.label }}
-          {{ day_form.date(type="date") }}
+          {{ day_form.date(type="date", class="form-control") }}
           {% for error in day_form.date.errors %}
           <span class="error">{{ error }}</span>
           {% endfor %}
         </div>
         
         <div class="form-group">
-          {{ day_form.type.label }}
-          {{ day_form.type() }}
-          {% for error in day_form.type.errors %}
+          {{ day_form.form.day_type.label }}
+          {{ day_form.form.day_type(class="form-control") }}
+          {% for error in day_form.form.day_type.errors %}
           <span class="error">{{ error }}</span>
           {% endfor %}
         </div>
@@ -30,7 +30,7 @@
     
     <div class="form-group" style="display: flex; gap: 10px;">
       {{ form.add_day(value="Add Another Day") }}
-      {{ form.submit(value="Next") }}
+      {{ form.submit(value="Next", class="btn btn-primary") }}
     </div>
   </form>
   

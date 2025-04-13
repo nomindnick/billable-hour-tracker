@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>No Goal Found</h1>
+  
+  <p>You don't have a billable hour goal set up for {{ year }}.</p>
+  
+  <p>Please complete the setup wizard to access your dashboard:</p>
+  
+  <div class="action-buttons">
+    <a href="{{ url_for('setup.wizard') }}" class="button">Complete Setup</a>
+  </div>
+{% endblock %}

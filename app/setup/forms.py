@@ -1,7 +1,7 @@
 # app/setup/forms.py
 from datetime import date
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DateField, SelectField, FloatField, SubmitField, FieldList, FormField
+from wtforms import IntegerField, DateField, SelectField, FloatField, SubmitField, FieldList, FormField, StringField
 from wtforms.validators import DataRequired, NumberRange, Optional
 
 class GoalForm(FlaskForm):
@@ -11,18 +11,14 @@ class GoalForm(FlaskForm):
                                validators=[DataRequired(), NumberRange(min=0, max=4000)])
     submit = SubmitField('Next')
 
-class DayOffForm(FlaskForm):
-    date = DateField('Date', validators=[DataRequired()], format='%Y-%m-%d')
-    type = SelectField('Type', choices=[
-        ('Holiday', 'Firm Holiday'),
-        ('Vacation', 'Vacation'),
-        ('Personal', 'Personal Day')
-    ])
+class DayOffSubForm(FlaskForm):
+    date = DateField('Date', validators=[DataRequired()])
+    day_type = StringField('Day Type', validators=[DataRequired()])
 
 class DaysOffForm(FlaskForm):
-    days_off = FieldList(FormField(DayOffForm), min_entries=1)
-    submit = SubmitField('Next')
+    days_off = FieldList(FormField(DayOffSubForm), min_entries=1)
     add_day = SubmitField('Add Another Day')
+    submit = SubmitField('Next')
 
 class MonthlyWeightForm(FlaskForm):
     january = FloatField('January', validators=[DataRequired(), NumberRange(min=0.1, max=2.0)], default=1.0)
